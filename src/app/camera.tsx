@@ -49,7 +49,7 @@ function Camera({ apiKey }: CameraProps) {
 
   return (
     <div className="container">
-      <div className="flex flex-col items-center justify-start min-h-screen">
+      <div className="flex flex-col items-center justify-start">
         <h1 className="text-4xl font-bold text-blue-600 mb-5">DIAGRAMMER.AI</h1>
         {img === null ? (
           <>

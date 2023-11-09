@@ -19,8 +19,6 @@ type Response = {
 export const uploadToOpenAI = async (image: string, apiKey: string) => {
   let graph = "";
 
-  console.log("uploadToOpenAI");
-
   try {
     const res: Response = await axios.post<OpenAIResponse>(
       "https://api.openai.com/v1/chat/completions",
@@ -41,7 +39,6 @@ export const uploadToOpenAI = async (image: string, apiKey: string) => {
                 type: "image_url",
                 image_url: {
                   url: image,
-                  detail: "low",
                 },
               },
             ],
@@ -57,7 +54,6 @@ export const uploadToOpenAI = async (image: string, apiKey: string) => {
       }
     );
 
-    console.log("RESPONSE!");
     let msg = res.data.choices[0].message.content;
     const lines = msg.split("\n");
     if (lines.length > 1 && lines[0].includes("```")) {
@@ -65,7 +61,6 @@ export const uploadToOpenAI = async (image: string, apiKey: string) => {
     }
     graph = msg;
   } catch (error) {
-    console.log("ERROR!");
     console.log(error);
     throw new Error();
   }

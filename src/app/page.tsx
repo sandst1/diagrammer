@@ -67,6 +67,11 @@ export default function Home() {
           )}
         </div>
       </div>
+      <footer className="dark:bg-gray-800">
+        <a href="https://github.com/sandst1/diagrammer" target="_blank">
+          GitHub
+        </a>
+      </footer>
     </main>
   );
 }
