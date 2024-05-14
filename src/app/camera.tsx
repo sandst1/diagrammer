@@ -90,7 +90,7 @@ function Camera({ apiKey }: CameraProps) {
           <>
             <img width="600" height="480" src={img} alt="screenshot" />
             <div className="text-lg text-gray-700 mt-4">
-              GPT-4V is crunching numbers...
+              GPT-4o is crunching numbers...
             </div>
           </>
         )}

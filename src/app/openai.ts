@@ -23,14 +23,20 @@ export const uploadToOpenAI = async (image: string, apiKey: string) => {
     const res: Response = await axios.post<OpenAIResponse>(
       "https://api.openai.com/v1/chat/completions",
       {
-        model: "gpt-4-vision-preview",
+        model: "gpt-4o",
         messages: [
           {
             role: "system",
             content: `You are a software architect with expertise in drawing diagrams.
-                      Please list the objects, the text in each and the relationships between
-                      the objects, and formulate the output as draw.io compatible inline xml.
-                      ONLY answer with xml, no text before or after`,
+                      Please list the objects, the text in each and the relationships 
+                      between the objects. If the lines between objects have text, include
+                      those too.
+
+                      If you see non-bubbled text, include them into the xml too.
+
+                      Aim for a clean layout.
+
+                      Formulate the output as a single draw.io compatible inline xml structure.`,
           },
           {
             role: "user",
@@ -44,7 +50,7 @@ export const uploadToOpenAI = async (image: string, apiKey: string) => {
             ],
           },
         ],
-        max_tokens: 2048,
+        max_tokens: 4096,
       },
       {
         headers: {
@@ -55,11 +61,18 @@ export const uploadToOpenAI = async (image: string, apiKey: string) => {
     );
 
     let msg = res.data.choices[0].message.content;
+
     const lines = msg.split("\n");
-    if (lines.length > 1 && lines[0].includes("```")) {
-      msg = msg.split("\n").slice(1, -1).join("\n");
+    const startCodeBlockIndex = lines.findIndex((line) => line.includes("```"));
+    const endCodeBlockIndex = lines.findIndex(
+      (line, index) => line.includes("```") && index > startCodeBlockIndex
+    );
+    if (startCodeBlockIndex !== -1 && endCodeBlockIndex !== -1) {
+      msg = lines.slice(startCodeBlockIndex + 1, endCodeBlockIndex).join("\n");
     }
     graph = msg;
+
+    console.log(graph);
   } catch (error) {
     console.log(error);
     throw new Error();
